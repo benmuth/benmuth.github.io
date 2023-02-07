@@ -1,0 +1,4 @@
+baseURL = 'https://benmuth.github.io'
+languageCode = 'en-us'
+title = 'bits and blogs'
+theme = 'ananke'
