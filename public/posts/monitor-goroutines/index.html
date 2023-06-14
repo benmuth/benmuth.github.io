@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Monitor Goroutines | bits and blogs</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.
+Recently, I had to deal with data races for the first time while working on a collaborative terminal text editor. After adding a new feature, I ran the program through Go&rsquo;s handy dandy data race detector, and unfortunately, it was not very happy with me.">
+    <meta name="generator" content="Hugo 0.111.3">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+    
+    
+    
+      
+
+    
+
+    
+    
+    <meta property="og:title" content="Monitor Goroutines" />
+<meta property="og:description" content="This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.
+Recently, I had to deal with data races for the first time while working on a collaborative terminal text editor. After adding a new feature, I ran the program through Go&rsquo;s handy dandy data race detector, and unfortunately, it was not very happy with me." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://benmuth.github.io/posts/monitor-goroutines/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-06-14T11:55:00-05:00" />
+<meta property="article:modified_time" content="2023-06-14T11:55:00-05:00" />
+<meta itemprop="name" content="Monitor Goroutines">
+<meta itemprop="description" content="This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.
+Recently, I had to deal with data races for the first time while working on a collaborative terminal text editor. After adding a new feature, I ran the program through Go&rsquo;s handy dandy data race detector, and unfortunately, it was not very happy with me."><meta itemprop="datePublished" content="2023-06-14T11:55:00-05:00" />
+<meta itemprop="dateModified" content="2023-06-14T11:55:00-05:00" />
+<meta itemprop="wordCount" content="1319">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Monitor Goroutines"/>
+<meta name="twitter:description" content="This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.
+Recently, I had to deal with data races for the first time while working on a collaborative terminal text editor. After adding a new feature, I ran the program through Go&rsquo;s handy dandy data race detector, and unfortunately, it was not very happy with me."/>
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        bits and blogs
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked">
+          
+        POSTS
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">Monitor Goroutines</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2023-06-14T11:55:00-05:00">June 14, 2023</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.</p>
+<p>Recently, I had to deal with data races for the first time while working on a <a href="https://github.com/burntcarrot/pairpad">collaborative terminal text editor</a>. After adding a new feature, I ran the program through Go&rsquo;s handy dandy <a href="https://go.dev/doc/articles/race_detector">data race detector</a>, and unfortunately, it was not very happy with me. I set about fixing the detected races. Halfway through some refactoring, I came upon the idea of <a href="https://en.wikipedia.org/wiki/Monitor_(synchronization)">monitor</a> goroutines in <a href="https://gopl.io">The Go Programming Language</a> as a way to protect shared memory. This idea was already pretty similar to our original design, and the natural implementation kind of fell out of the concurrency primitives in Go, so I found it a very helpful way to think about solving conflicting memory access.</p>
+<p>Here&rsquo;s a rough sketch of what our code used to look like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Editor holds all the state of an editing session.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Editor</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Text</span> [][]<span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">StatusMsg</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// other stuff...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// listenForInput listens for input events and sends them over the
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// returned channel
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">listenForInput</span>() <span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">InputEvent</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">inputChan</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">InputEvent</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>() {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">inputChan</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">PollEvent</span>()
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">inputChan</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// listenForMessages listens over the connection for JSON messages
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// and sends them over the returned  channel.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">listenForMessages</span>() <span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">Message</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">messageChan</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">Message</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>() {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// get some JSON message from connection
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#a6e22e">messageChan</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">someJSONMessage</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">messageChan</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// mainLoop listens on the local and remote message channels to
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// update the editor contents.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">e</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Editor</span>) <span style="color:#a6e22e">mainLoop</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">inputChan</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">listenForInput</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">messageChan</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">listenForMessages</span>()
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">select</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">input</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">inputChan</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">LocalUpdate</span>(<span style="color:#a6e22e">input</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">message</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">messageChan</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">RemoteUpdate</span>(<span style="color:#a6e22e">message</span>)	
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// LocalUpdate updates editor contents with the contents of the user
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// input event using the CRDT insertion/deletion, and renders the result.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">e</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Editor</span>) <span style="color:#a6e22e">LocalUpdate</span>(<span style="color:#a6e22e">input</span> <span style="color:#a6e22e">InputEvent</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// ...update editor state
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">Draw</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// RemoteUpdate updates the editor contents with the contents of the
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// remote message using the CRDT insertion/deletion, and renders the result.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">e</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Editor</span>) <span style="color:#a6e22e">RemoteUpdate</span>(<span style="color:#a6e22e">message</span> <span style="color:#a6e22e">Message</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// ...update editor state
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">Draw</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Draw renders the editor contents to the terminal.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">e</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Editor</span>) <span style="color:#a6e22e">Draw</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">lineNumber</span>, <span style="color:#a6e22e">line</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">Text</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// ...render text buffer to terminal
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// ...render e.StatusMsg to last line in terminal
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>Our actual implementation wasn&rsquo;t exactly like this, and I&rsquo;ve left out all the details, but this should be sufficient for now.</p>
+<p>From what I&rsquo;ve shown here, this design seems fine, because all editor access happens in the <code>for</code> loop in the <code>mainLoop</code> function. <code>LocalUpdate</code> and <code>RemoteUpdate</code> don&rsquo;t spawn their own goroutines, so that <code>select</code> statement actually blocks the goroutines while each case is executing its update and render. It&rsquo;s not an optimal use of computer resources, but it&rsquo;s a pretty simple way to get concurrency safety.</p>
+<p>The problem with our design was how we implemented updating the status bar. The status bar was (in part) for alerting the user to errors like failing to save to a file, or a message indicating you had disconnected from the server.</p>
+<p>In order to get timely updates on exactly when something went wrong, we were updating the status message (<code>Editor.StatusMsg</code>)  and calling <code>Editor.Draw()</code> the moment the error was detected. Errors could happen at any time in any active goroutine. Instead of having a pipeline sending messages from each place there could be an error, we were updating and drawing the status message all over the place. It was messy and full of trivial data races.</p>
+<p>If you&rsquo;re faced with data races and don&rsquo;t know what to do, consider the advice at the top of <a href="https://go.dev/ref/mem">the article on Go&rsquo;s memory model</a>: &ldquo;Programs that modify data being simultaneously accessed by multiple goroutines must serialize such access. To serialize access, protect the data with channel operations&rdquo;.</p>
+<p>They make it sound so simple! And while data races can be <a href="%5Buber%5D(https://www.uber.com/en-MX/blog/data-race-patterns-in-go/)">very tricky</a>, in our case thankfully is pretty much that simple.</p>
+<p>Let&rsquo;s start from the inside-out. <code>Editor.Draw()</code> accesses a bunch of state at once, like the text buffer and the status message. How do we serialize it? Let&rsquo;s try using a channel:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">drawLoop</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">DrawChan</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">Draw</span>()
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">e</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Editor</span>) <span style="color:#a6e22e">SendDraw</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">DrawChan</span> <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>So what does this mean? We&rsquo;re using a channel to serialize access to the draw function. So if we replace all of our previous calls to <code>Editor.Draw()</code> with <code>Editor.SendDraw()</code>, the channel receive operation in the <code>drawLoop</code> (the <code>&lt;- e.DrawChan</code> part) will block any concurrent calls to <code>Editor.SendDraw()</code> until the current <code>e.Draw()</code> call finishes. Just like that, <code>e.Draw()</code> is serialized.</p>
+<p>Note that this is similar to our previous design:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">e</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Editor</span>) <span style="color:#a6e22e">mainLoop</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">inputChan</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">listenForInput</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">messageChan</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">listenForMessages</span>()
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">select</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">input</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">inputChan</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">LocalUpdate</span>(<span style="color:#a6e22e">input</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">message</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">messageChan</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">RemoteUpdate</span>(<span style="color:#a6e22e">message</span>)	
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>Editor.LocalUpdate</code> and <code>Editor.RemoteUpdate</code> both contain a call to <code>Draw</code>, but there won&rsquo;t be a data race between them because they&rsquo;re in the same goroutine. The trouble with the design comes when you try to scale to contain more goroutines with more calls to <code>Draw</code> (like for updating the status bar). With the old design, to safely deal with more goroutines, you have to set up a separate pipeline of messages, and add a channel to the select statement, even if all you&rsquo;re doing is a read of the text buffer (like when you&rsquo;re drawing the text to the terminal). With the new design, we don&rsquo;t have to worry so much about the plumbing, because <code>e.Draw</code> is hidden behind the <code>drawChan</code> that will act as our &ldquo;monitor&rdquo;. If everyone shares the same pipeline, then everyone has to wait in line to get to what&rsquo;s at the end of the pipe. No racing allowed!</p>
+<p>Now, to finish up, we just have to call <code>go drawLoop()</code> sometime before our main loop, and it will be there waiting patiently any time we have to update the terminal!</p>
+<p>There&rsquo;s still the question of how exactly to fix status updates, since the status bar isn&rsquo;t included in this pipeline. The solution I went with uses another monitor. Now, every time we want to update the status message, which can happen from any goroutine, we send the new status message to the <code>StatusChan</code>, ensuring status updates are serialized. We have another goroutine running a <code>for</code> loop that listens for messages on the <code>StatusChan</code>, updates the status message behind a lock, and sends draw requests with <code>Editor.SendDraw()</code>, where access to the status message is also protected by a lock. The monitor (<code>StatusChan</code>) isn&rsquo;t strictly necessary here, because I&rsquo;m still using a lock to allow for concurrent access of the <code>StatusMsg</code> by <code>Editor.Draw</code>. I could have just called <code>updateStatusMessage()</code> directly at the point where the problem occurs, but that would potentially allow for a bunch of lock contention if multiple status updates happen at once, and they would block execution of the main threads. Using the combination of the monitor and locks</p>
+<ol>
+<li>allows for concurrent access by two time sensitive goroutines (updating status and updating the display)</li>
+<li>reduces lock contention because write access is serialized</li>
+<li>doesn&rsquo;t impact the execution of the main threads, since now status updates are just sent into the background for processing instead of being called in place
+I feel like this is a pretty good balance!</li>
+</ol>
+<p>Monitor goroutines are both simple to reason about and implement and a pretty essential way to minimize the pitfalls of concurrency. You might find yourself using them without even knowing they had a formal name! Either way, hopefully next time you run into data races, you&rsquo;ll be quick to consider monitors as a solution.</p>
+<h3 id="see-also">See also:</h3>
+<ul>
+<li><a href="https://medium.com/dm03514-tech-blog/golang-monitors-and-mutexes-a-light-survey-84f04f9b7c09">Monitors and Mutexes: a (light) survey</a></li>
+<li><a href="https://dl.acm.org/doi/pdf/10.1145/355620.361161">Monitors: An Operating System Structuring Concept</a></li>
+</ul>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://benmuth.github.io/" >
+    &copy;  bits and blogs 2023 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>
