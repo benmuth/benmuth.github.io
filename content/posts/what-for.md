@@ -1,7 +1,7 @@
 ---
 title: "What's this for?"
 date: 2023-07-18T15:39:23-05:00
-draft: true
+draft: false
 ---
 
 To start, this blog is for me. I want a record of my projects and learnings over time. I [write to think](https://herbertlui.net/dont-think-to-write-write-to-think/), [put ideas into words](http://www.paulgraham.com/words.html), and to figure out what I really know and don't know. I want to get better at explaining and discussing technical topics.

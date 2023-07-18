@@ -6,7 +6,17 @@
     <description>Recent content on ben&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 14 Jun 2023 11:55:00 -0500</lastBuildDate><atom:link href="https://benmuth.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 18 Jul 2023 15:39:23 -0500</lastBuildDate><atom:link href="https://benmuth.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What&#39;s this for?</title>
+      <link>https://benmuth.github.io/posts/what-for/</link>
+      <pubDate>Tue, 18 Jul 2023 15:39:23 -0500</pubDate>
+      
+      <guid>https://benmuth.github.io/posts/what-for/</guid>
+      <description>To start, this blog is for me. I want a record of my projects and learnings over time. I write to think, put ideas into words, and to figure out what I really know and don&amp;rsquo;t know. I want to get better at explaining and discussing technical topics.
+This blog might also be for you. My imagined audience is me from 6 months prior. As some background, I started programming a few years ago, and I&amp;rsquo;m going to write about things that have been interesting or confusing to me, like how a CRDT algorithm decides where to insert a character, or how WebSockets work.</description>
+    </item>
+    
     <item>
       <title>Monitor Goroutines</title>
       <link>https://benmuth.github.io/posts/monitor-goroutines/</link>
