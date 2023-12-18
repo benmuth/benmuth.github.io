@@ -1,32 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on ben&#39;s blog</title>
-    <link>https://blog.benmuth.com/</link>
-    <description>Recent content in Home on ben&#39;s blog</description>
+    <title>red on ben&#39;s blog</title>
+    <link>https://blog.benmuth.com/tags/red/</link>
+    <description>Recent content in red on ben&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 01 Jan 2023 08:00:00 -0700</lastBuildDate><atom:link href="https://blog.benmuth.com/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>What&#39;s this for?</title>
-      <link>https://blog.benmuth.com/posts/what-for/</link>
-      <pubDate>Tue, 18 Jul 2023 15:39:23 -0500</pubDate>
-      
-      <guid>https://blog.benmuth.com/posts/what-for/</guid>
-      <description>To start, this blog is for me. I want a record of my projects and learnings over time. I write to think, put ideas into words, and to figure out what I really know and don&amp;rsquo;t know. I want to get better at explaining and discussing technical topics.
-This blog might also be for you. My imagined audience is me from 6 months prior. As some background, I started programming a few years ago, and I&amp;rsquo;m going to write about things that have been interesting or confusing to me, like how a CRDT algorithm decides where to insert a character, or how WebSockets work.</description>
-    </item>
-    
-    <item>
-      <title>Monitor Goroutines</title>
-      <link>https://blog.benmuth.com/posts/monitor-goroutines/</link>
-      <pubDate>Wed, 14 Jun 2023 11:55:00 -0500</pubDate>
-      
-      <guid>https://blog.benmuth.com/posts/monitor-goroutines/</guid>
-      <description>This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&amp;rsquo;re familiar with Go&amp;rsquo;s concurrency model but haven&amp;rsquo;t played with it much.
-Recently, I had to deal with data races for the first time while working on a collaborative terminal text editor. After adding a new feature, I ran the program through Go&amp;rsquo;s handy dandy data race detector, and unfortunately, it was not very happy with me.</description>
-    </item>
-    
+    <lastBuildDate>Wed, 15 Mar 2023 11:00:00 -0700</lastBuildDate><atom:link href="https://blog.benmuth.com/tags/red/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Post 3</title>
       <link>https://blog.benmuth.com/posts/post-3/</link>

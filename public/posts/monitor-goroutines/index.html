@@ -1,124 +1,46 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    
-    <title>Monitor Goroutines | ben&#39;s blog</title>
-    <meta name="viewport" content="width=device-width,minimum-scale=1">
-    <meta name="description" content="This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.
-Recently, I had to deal with data races for the first time while working on a collaborative terminal text editor. After adding a new feature, I ran the program through Go&rsquo;s handy dandy data race detector, and unfortunately, it was not very happy with me.">
-    <meta name="generator" content="Hugo 0.111.3">
-    
-    
-    
-    
-      <meta name="robots" content="noindex, nofollow">
-    
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Monitor Goroutines | ben&#39;s blog</title>
 
-    
-<link rel="stylesheet" href="/ananke/css/main.min.css" >
+      <link rel="stylesheet" href="/css/main.min.73be4799b2091d293b47b52ca2642fe82aa2b1c9c050e8d1b389a80939a30dd4.css" integrity="sha256-c75HmbIJHSk7R7UsomQv6CqiscnAUOjRs4moCTmjDdQ=" crossorigin="anonymous">
 
 
+      <script src="/js/main.23cd0c7d837263b9eaeb96ee2d9ccfa2969daa3fa00fa1c1fe8701a9b87251a1.js" integrity="sha256-I80MfYNyY7nq65buLZzPopadqj&#43;gD6HB/ocBqbhyUaE=" crossorigin="anonymous"></script>
 
-    
-    
-    
-      
 
-    
-
-    
-    
-    <meta property="og:title" content="Monitor Goroutines" />
-<meta property="og:description" content="This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.
-Recently, I had to deal with data races for the first time while working on a collaborative terminal text editor. After adding a new feature, I ran the program through Go&rsquo;s handy dandy data race detector, and unfortunately, it was not very happy with me." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://benmuth.github.io/posts/monitor-goroutines/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-06-14T11:55:00-05:00" />
-<meta property="article:modified_time" content="2023-06-14T11:55:00-05:00" />
-<meta itemprop="name" content="Monitor Goroutines">
-<meta itemprop="description" content="This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.
-Recently, I had to deal with data races for the first time while working on a collaborative terminal text editor. After adding a new feature, I ran the program through Go&rsquo;s handy dandy data race detector, and unfortunately, it was not very happy with me."><meta itemprop="datePublished" content="2023-06-14T11:55:00-05:00" />
-<meta itemprop="dateModified" content="2023-06-14T11:55:00-05:00" />
-<meta itemprop="wordCount" content="1314">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Monitor Goroutines"/>
-<meta name="twitter:description" content="This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.
-Recently, I had to deal with data races for the first time while working on a collaborative terminal text editor. After adding a new feature, I ran the program through Go&rsquo;s handy dandy data race detector, and unfortunately, it was not very happy with me."/>
-
-	
-  </head>
-
-  <body class="ma0 avenir bg-near-white">
-
-    
-   
-  
-
+</head>
+<body>
   <header>
-    <div class="bg-black">
-      <nav class="pv3 ph3 ph4-ns" role="navigation">
-  <div class="flex-l justify-between items-center center">
-    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
-      
-        ben&#39;s blog
-      
-    </a>
-    <div class="flex-l items-center">
-      
+    <h1>ben&#39;s blog</h1>
 
-      
-      
-<div class="ananke-socials">
-  
-</div>
+  <nav>
+    <ul>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a aria-current="true" class="ancestor" href="/posts/">Posts</a>
+    </li>
+    <li>
+      <a href="/tags/">Tags</a>
+    </li>
+    </ul>
+  </nav>
 
-    </div>
-  </div>
-</nav>
 
-    </div>
   </header>
-
-
-
-    <main class="pb7" role="main">
-      
-  
-  <article class="flex-l flex-wrap justify-between mw8 center ph3">
-    <header class="mt4 w-100">
-      <aside class="instapaper_ignoref b helvetica tracked">
-          
-        POSTS
-      </aside>
-      
-
-
-
-
-
-
-
-
-
-
-  <div id="sharing" class="mt3 ananke-socials">
+  <main>
     
-  </div>
+  <h1>Monitor Goroutines</h1>
 
+  
+  
+  <time datetime="2023-06-14T11:55:00-05:00">June 14, 2023</time>
 
-      <h1 class="f1 athelas mt3 mb1">Monitor Goroutines</h1>
-      
-      
-      
-      <time class="f6 mv4 dib tracked" datetime="2023-06-14T11:55:00-05:00">June 14, 2023</time>
-      
-
-      
-      
-    </header>
-    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.</p>
+  <p>This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you&rsquo;re familiar with Go&rsquo;s concurrency model but haven&rsquo;t played with it much.</p>
 <p>Recently, I had to deal with data races for the first time while working on a <a href="https://github.com/burntcarrot/pairpad">collaborative terminal text editor</a>. After adding a new feature, I ran the program through Go&rsquo;s handy dandy <a href="https://go.dev/doc/articles/race_detector">data race detector</a>, and unfortunately, it was not very happy with me. I set about fixing the detected races. Halfway through some refactoring, I came upon the idea of <a href="https://en.wikipedia.org/wiki/Monitor_(synchronization)">monitor</a> goroutines in <a href="https://gopl.io">The Go Programming Language</a> as a way to protect shared memory. This idea was already pretty similar to our original design, and the natural implementation kind of fell out of the concurrency primitives in Go, so I found it a helpful way to think about solving conflicting memory access.</p>
 <p>Here&rsquo;s a rough sketch of what our code used to look like:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Editor holds all the state of an editing session.
@@ -237,37 +159,14 @@ Recently, I had to deal with data races for the first time while working on a co
 <li><a href="https://medium.com/dm03514-tech-blog/golang-monitors-and-mutexes-a-light-survey-84f04f9b7c09">Monitors and Mutexes: a (light) survey</a></li>
 <li><a href="https://dl.acm.org/doi/pdf/10.1145/355620.361161">Monitors: An Operating System Structuring Concept</a></li>
 </ul>
-<ul class="pa0">
+
   
-</ul>
-<div class="mt6 instapaper_ignoref">
-      
-      
-      </div>
-    </div>
-
-    <aside class="w-30-l mt6-l">
 
 
+  </main>
+  <footer>
+    <p>Copyright 2023. All rights reserved.</p>
 
-
-</aside>
-
-  </article>
-
-    </main>
-    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
-  <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://benmuth.github.io/" >
-    &copy;  ben's blog 2023 
-  </a>
-    <div>
-<div class="ananke-socials">
-  
-</div>
-</div>
-  </div>
-</footer>
-
-  </body>
+  </footer>
+</body>
 </html>

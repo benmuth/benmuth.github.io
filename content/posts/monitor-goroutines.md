@@ -1,6 +1,7 @@
 ---
 title: "Monitor Goroutines"
 date: 2023-06-14T11:55:00-05:00
+summary: "A simple way to work with shared memory in Go"
 draft: false
 ---
 This is about a small refactoring I did to fix some data races using basic Go concurrency primitives. This might be interesting to you if you're familiar with Go's concurrency model but haven't played with it much.

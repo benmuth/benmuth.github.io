@@ -1,0 +1,75 @@
+html {
+    /* background stippling */
+    background-color:#ecdebb;
+    background-image: radial-gradient(black 15%, transparent 16%),
+radial-gradient(black 15%, transparent 16%);
+background-size: 10px 10px;
+background-position: 0 0, 30px 30px;
+
+/* Stars background example */
+/* background-color:black;
+background-image:
+radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;    */
+}
+
+p {
+    background-color: #ecdfbb;
+    font-family: "Charter", serif;
+    /* border: solid 2px #444444; */
+    font-size: 1.4em;
+    line-height: 1.35;
+    margin: auto;
+    margin-top: 50px;
+    max-width: 30em;
+    padding: 20px;
+    text-align: center;
+}
+
+nav {
+    background-color:#ecdebb;
+    border: solid #444444;
+    padding: 0.25em;
+    margin: 0.5em auto auto auto;
+    text-align: center;
+    font: 1.5em "IBM Plex Sans", sans-serif;
+    max-width: 50%;
+    width: 25em;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+}
+
+
+
+h1, h2 {
+    background-color:#ecdebb;
+    border: solid #444444;
+    padding: 0.25em;
+    margin: 0.1em auto auto auto;
+    text-align: center;
+    font: 1.5em "IBM Plex Sans", sans-serif;
+    max-width: 50%;
+    width: 25em;
+}
+
+#container {
+    display: flex;
+    flex-flow: column wrap;
+}
+
+a {
+    color: rgb(148, 39, 39);
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(56, 67, 148);
+    text-decoration: underline dotted;
+}

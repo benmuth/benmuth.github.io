@@ -1,6 +1,7 @@
 ---
 title: "What's this for?"
 date: 2023-07-18T15:39:23-05:00
+summary: "Why does this blog exist?"
 draft: false
 ---
 

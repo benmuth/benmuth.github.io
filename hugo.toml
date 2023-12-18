@@ -1,0 +1,23 @@
+baseURL = 'https://blog.benmuth.com/'
+languageCode = 'en-us'
+title = "ben muthalaly"
+theme = 'my-blog'
+
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about"
+    weight = 1
+
+  [[menu.main]]
+    identifier = "blog"
+    name = "Blog"
+    url = "/posts/"
+    weight = 2
+
+  [[menu.main]]
+    identifier = "projects"
+    name = "Projects"
+    url = "/projects"
+    weight = 3
