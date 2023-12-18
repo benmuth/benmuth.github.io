@@ -1,0 +1,6 @@
+{{ define "main" }}
+{{.Content}}
+{{ with resources.GetMatch "*.pdf" }}
+<p><a href="{{ .RelPermalink }}">pdf link</a></p>
+{{ end }}
+{{ end }}
