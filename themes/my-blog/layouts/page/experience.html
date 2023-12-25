@@ -1,0 +1,6 @@
+{{ define "main" }}
+<p class="resume-link"><a href="{{ .RelPermalink }}">resumé</a></p>
+<div class="experience">{{.Content}}</div>
+{{ with resources.GetMatch "*.pdf" }}
+{{ end }}
+{{ end }}

@@ -1,11 +1,22 @@
+:root {
+    /* --main-bg-color: #ecdebb;
+    --content-color: #f3e7cc; */
+    --main-bg-color: #f3e7cc;
+    --content-color: #ecdebb; 
+    --border-color: #444444;
+    --link-color: rgb(72, 92, 203);
+    --link-hover-color: rgb(148, 39, 39);
+    --link-visited-color: rgb(26, 20, 136);
+}
+
 html {
     /* background stippling */
-    background-color:#ecdebb;
-    background-image: radial-gradient(black 15%, transparent 16%),
-radial-gradient(black 15%, transparent 16%);
-background-size: 10px 10px;
-background-position: 0 0, 30px 30px;
-
+    background-color: var(--main-bg-color);
+    background-image: 
+        radial-gradient(black 15%, transparent 11%);
+    background-size: 10px 10px;
+    background-position: 4px 3px;
+    font-size: 16px;
 /* Stars background example */
 /* background-color:black;
 background-image:
@@ -16,28 +27,120 @@ radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px
 background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;    */
 }
 
-p {
-    background-color: #ecdfbb;
+/* p {
+    background-color: var(--content-color);
     font-family: "Charter", serif;
-    /* border: solid 2px #444444; */
+     border: solid 2px #444444;
     font-size: 1.4em;
     line-height: 1.35;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 0.5em;
+    margin-bottom: 1.0em;
     max-width: 30em;
     padding: 20px;
     text-align: center;
+} 
+*/
+
+div.post{
+    background-color: var(--content-color);
+    border: solid var(--border-color);
+    padding: 0.25em;
+    margin-top: 1.0em;
+    margin-left: auto;
+    margin-bottom: 1.0em;
+    margin-right: auto;
+    /* margin: 0.5em auto auto auto; */
+    text-align: center;
+    font: 1.25em "IBM Plex Sans", sans-serif;
+    max-width: 60%;
+    /* width: 25em; */
+}
+
+div.post p{
+    text-align: left;
+    margin-top: 0.5em;
+    margin-left: 1.0em;
+    margin-bottom: 1.0em;
+    margin-right: auto;
+    font: 1.0em "IBM Plex Sans", sans-serif;
+}
+
+div.experience {
+    background-color: var(--content-color);
+    border: solid var(--border-color);
+    /* padding: 0.25em; */
+    padding-left: 1.25em;
+    padding-top: auto;
+    padding-right: auto;
+    padding-bottom: auto;
+
+    margin-top: 1.0em;
+    margin-left: auto;
+    margin-bottom: 1.0em;
+    margin-right: auto;
+    /* margin: 0.5em auto auto auto; */
+    /* text-align: center; */
+    font: 1.25em "IBM Plex Sans", sans-serif;
+    max-width: 60%;
+    /* width: 25em; */
+}
+
+header{
+    background-color: var(--content-color);
+    border: solid var(--border-color);
+    padding: 0.25em;
+    margin-top: 1.0em;
+    margin-left: auto;
+    margin-bottom: auto;
+    margin-right: auto;
+    text-align: center;
+    font: 1.0em "IBM Plex Sans", sans-serif;
+    max-width: 50%;
+    /* width: 25em; */
 }
 
 nav {
-    background-color:#ecdebb;
-    border: solid #444444;
-    padding: 0.25em;
-    margin: 0.5em auto auto auto;
+    background-color: var(--content-color);
+    border: dashed var(--border-color);
+    /* padding: 0.15em; */
+    margin-top: 1.0em;
+    margin-left: 0.5em;
+    margin-bottom: 0.5em;
+    margin-right: 0.5em;
     text-align: center;
-    font: 1.5em "IBM Plex Sans", sans-serif;
+    font: 1.25em "IBM Plex Sans", sans-serif;
+    font-weight: 600;
+    /* max-width: 50%;
+    width: 25em; */
+}
+
+p.resume-link {
+    background-color: var(--content-color);
+    border: solid var(--border-color);
+    padding: 0.25em;
+    margin-top: 1.0em;
+    margin-left: auto;
+    margin-bottom: 1.0em;
+    margin-right: auto;
+    text-align: center;
+    font: 1.25em "IBM Plex Sans", sans-serif;
+    max-width: 25%;
+    /* width: 25em; */
+}
+
+#about {
+    background-color: var(--content-color);
+    border: solid var(--border-color);
+    padding: 0.25em;
+    margin-top: 1.0em;
+    margin-left: auto;
+    margin-bottom: 1.0em;
+    margin-right: auto;
+    text-align: center;
+    font: 1.25em "IBM Plex Sans", sans-serif;
     max-width: 50%;
-    width: 25em;
+    /* width: 25em; */
 }
 
 nav ul {
@@ -46,18 +149,38 @@ nav ul {
     justify-content: space-around;
 }
 
-
-
-h1, h2 {
-    background-color:#ecdebb;
-    border: solid #444444;
+h1 {
+    background-color: var(--content-color);
     padding: 0.25em;
-    margin: 0.1em auto auto auto;
+    margin-top: 0.0em;
+    margin-left: auto;
+    margin-bottom: 0.em;
+    margin-right: auto;
+    text-align: center;
+    font: 1.6em "IBM Plex Sans", sans-serif;
+}
+
+h2 {
+    background-color: var(--content-color);
+    padding: 0.25em;
+    margin-top: 0.5em;
+    margin-left: auto;
+    margin-bottom: 0.5em;
+    margin-right: auto;
+    text-align: center;
+    font: 1.2em "IBM Plex Sans", sans-serif;
+}
+
+/* h1, h2 {
+    background-color: var(--content-color);
+    border: solid var(--border-color);
+    padding: 0.25em;
+    margin: 0.4em auto 0px auto;
     text-align: center;
     font: 1.5em "IBM Plex Sans", sans-serif;
     max-width: 50%;
     width: 25em;
-}
+} */
 
 #container {
     display: flex;
@@ -65,11 +188,16 @@ h1, h2 {
 }
 
 a {
-    color: rgb(148, 39, 39);
+    color: var(--link-color);
     text-decoration: none;
 }
 
 a:hover {
-    color: rgb(56, 67, 148);
+    color: var(--link-hover-color);
     text-decoration: underline dotted;
 }
+
+/* a:visited {
+    color: var(--link-visited-color);
+    text-decoration: none;
+} */
