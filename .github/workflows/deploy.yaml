@@ -14,23 +14,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      # - name: Set up Go
-      #   uses: actions/setup-go@v5
-      #   with:
-      #     go-version: '1.22'
       - name: Install dependencies
         run: |
-          # sudo apt-get update
-          # sudo apt-get install -y curl html-xml-utils yui-compressor
           curl https://bagatto.co/builds/bag-x86_64-static.v0-6-1.tar.gz -o bag.tar.gz
           tar -xvf bag.tar.gz
-          # mv bag benmuth.github.io/
 
-      # - name: Run go test
-      #   run: go test -cover ./...
       - name: Build site
         run: |
-          # cd benmuth.github.io
           ./bag index.janet
 
       - name: Upload artifact
@@ -40,94 +30,17 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+
     needs: build
+
     if: github.ref == 'refs/heads/main'  # Ensure this step runs only for pushes to main
+
     permissions:
       id-token: write
       pages: write
+
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
-
-# name: Deploy to GitHub Pages
-
-# on:
-#   push:
-#     branches:
-#       - main
-#   workflow_dispatch:
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v3
-
-#       - name: Install dependencies
-#         run: |
-#           sudo apt-get update
-#           sudo apt-get install -y curl html-xml-utils yui-compressor
-#           curl https://bagatto.co/builds/bag-x86_64-static.v0-6-1.tar.gz -o bag.tar.gz
-#           tar -xvf bag.tar.gz
-#           mv bag {{REPO NAME}}/
-
-#       - name: Build site
-#         run: |
-#           cd {{REPO NAME}}
-#           ./bag {{INDEX MODULE}}.janet
-
-#       - name: Upload artifact
-#         uses: actions/upload-pages-artifact@v2
-#         with:
-#           path: {{OUTPUT DIRECTORY}}
-
-#   deploy:
-#     runs-on: ubuntu-latest
-#     needs: build
-#     if: github.ref == 'refs/heads/main'  # Ensure this step runs only for pushes to main
-#     steps:
-#       - name: Deploy to GitHub Pages
-#         uses: actions/deploy-pages@v2
-#         with:
-#           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-
-# ---------------------------------------------------------
-# name: Deploy to GitHub Pages
-
-# on:
-#   push:
-#     branches:
-#       - main
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v3
-
-#       - name: Install dependencies
-#         run: |
-#           sudo apt-get update
-#           sudo apt-get install -y curl html-xml-utils yui-compressor
-#           curl https://bagatto.co/builds/bag-x86_64-static.v0-6-1.tar.gz -o bag.tar.gz
-#           tar -xvf bag.tar.gz
-#           mv bag {{REPO NAME}}/
-
-#       - name: Build site
-#         run: |
-#           cd {{REPO NAME}}
-#           ./bag {{INDEX MODULE}}.janet
-
-#       - name: Deploy to GitHub Pages
-#         uses: peaceiris/actions-gh-pages@v3
-#         with:
-#           github_token: ${{ secrets.GITHUB_TOKEN }}
-#           publish_dir: {{OUTPUT DIRECTORY}}
