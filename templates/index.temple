@@ -1,0 +1,5 @@
+{% (bagatto/include "/templates/base-top") %}
+
+<h1>These are some of my favorite dogs</h1>
+
+{% (bagatto/include "/templates/base-bottom") %}

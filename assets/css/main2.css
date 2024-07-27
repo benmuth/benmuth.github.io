@@ -1,0 +1,175 @@
+/* Variables */
+:root {
+  --main-bg-color: #f3e7cc;
+  --content-color: #ecdebb;
+  --border-color: #444444;
+  --link-color: rgb(72, 92, 203);
+  --link-hover-color: rgb(148, 39, 39);
+  --link-visited-color: rgb(26, 20, 136);
+  --font-size-base: 16px;
+  --font-size-large: 1.25em;
+  --font-size-small: 0.875em;
+}
+
+/* Global Styles */
+html {
+  font-size: var(--font-size-base);
+  background-color: var(--main-bg-color);
+  background-image: radial-gradient(black 15%, transparent 11%);
+  background-size: 10px 10px;
+  background-position: 4px 3px;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "IBM Plex Sans", sans-serif;
+  line-height: 1.6;
+}
+
+/* Typography */
+h1 {
+  font-size: 1.6em;
+}
+
+h2 {
+  font-size: 1.2em;
+}
+
+/* Layout Components */
+.container {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.content-box {
+  background-color: var(--content-color);
+  border: solid var(--border-color);
+  padding: 0.25em;
+  margin: 1em auto;
+  text-align: center;
+}
+
+/* Header */
+header {
+  font-size: var(--font-size-base);
+  max-width: 50%;
+}
+
+/* Navigation */
+nav {
+  border-style: dashed;
+  margin: 1em 0.5em;
+  font-size: var(--font-size-large);
+  font-weight: 600;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  padding: 0;
+}
+
+/* Main Content */
+.post {
+  font-size: var(--font-size-large);
+  max-width: 60%;
+}
+
+.post p {
+  text-align: left;
+  margin: 0.5em 1em 1em 1em;
+  font-size: var(--font-size-base);
+}
+
+.experience {
+  padding-left: 1.25em;
+  font-size: var(--font-size-large);
+  max-width: 60%;
+  text-align: left;
+}
+
+#about {
+  font-size: var(--font-size-large);
+  max-width: 50%;
+}
+
+.resume-link {
+  font-size: var(--font-size-large);
+  max-width: 25%;
+}
+
+/* Apply .content-box styles to multiple elements */
+header,
+nav,
+.post,
+.experience,
+#about,
+.resume-link {
+  background-color: var(--content-color);
+  border: solid var(--border-color);
+  padding: 0.25em;
+  margin: 1em auto;
+  text-align: center;
+}
+
+/* Code Blocks */
+pre {
+  border: 1px solid #ddd;
+  border-left: 3px solid #f36d33;
+  font-family: monospace;
+  font-size: var(--font-size-small);
+  line-height: 1.6;
+  margin-bottom: 1.6em;
+  max-width: 100%;
+  overflow: auto;
+  padding: 1em 1.5em;
+  display: block;
+  word-wrap: break-word;
+  text-align: left;
+}
+
+/* Footer */
+footer {
+  border-style: dashed;
+  margin-top: auto;
+  font-size: var(--font-size-large);
+}
+
+/* Apply .content-box styles to footer */
+footer {
+  background-color: var(--content-color);
+  border: dashed var(--border-color);
+  padding: 0.25em;
+  margin: 1em auto;
+  text-align: center;
+}
+
+/* Links */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline dotted;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+  .post,
+  .experience,
+  #about {
+    max-width: 90%;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+}

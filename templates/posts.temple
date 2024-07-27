@@ -1,0 +1,20 @@
+<div class="grid-body">
+  <ul class="posts">
+  {% (loop [post :in (args :blog-posts)]
+    (when (not (post :draft))
+      (print "<li>")
+      (print "<a>")
+      (print (bagatto/format
+      		`<h2 class="post-listing"><a href="posts/%s.html">%s</a></h2>`
+                (bagatto/slugify (post :title))
+                (post :title))))
+      (print "</a>")
+      (print "</li>")
+      (print "<div class='summary'>")
+      (print (post :summary))
+      (print "</div>")
+    )
+  %}
+  </ul>
+</div>
+

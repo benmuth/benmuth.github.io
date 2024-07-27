@@ -1,0 +1,3 @@
+{% (bagatto/include "/templates/base-top") %}
+
+{% (bagatto/include "/templates/base-bottom") %}

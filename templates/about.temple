@@ -1,0 +1,12 @@
+{% (bagatto/include "/templates/base-top") %}
+
+	<header>
+		<h1>{{ (get-in args [:about :title])}}</h1>
+	</header>
+	<main>
+		<div id="about">
+			{- (bagatto/markdown->html (get-in args [:about :body])) -}
+		</div>
+	</main>
+
+{% (bagatto/include "/templates/base-bottom") %}
