@@ -31,7 +31,7 @@ jobs:
       #   run: go test -cover ./...
       - name: Build site
         run: |
-          cd benmuth.github.io
+          # cd benmuth.github.io
           ./bag index.janet
 
       - name: Upload artifact
