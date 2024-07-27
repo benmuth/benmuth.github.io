@@ -1,53 +1,48 @@
+/* Variables */
 :root {
-  /* --main-bg-color: #ecdebb;
-    --content-color: #f3e7cc; */
   --main-bg-color: #f3e7cc;
   --content-color: #ecdebb;
   --border-color: #444444;
+
   --link-color: rgb(72, 92, 203);
   --link-hover-color: rgb(148, 39, 39);
   --link-visited-color: rgb(26, 20, 136);
+
+  --font-size-base: 15px;
+}
+
+/* Global Styles */
+html {
+  background-color: var(--main-bg-color);
+  font-size: var(--font-size-base);
 }
 
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: "IBM Plex Serif", serif;
+  line-height: 1.35;
 }
 
-html {
-  /* background stippling */
-  background-color: var(--main-bg-color);
-  background-image:
-    radial-gradient(black 15%, transparent 11%);
-  background-size: 10px 10px;
-  background-position: 4px 3px;
-  font-size: 16px;
-  /* Stars background example */
-  /* background-color:black;
-background-image:
-radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
-radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
-radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
-radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
-background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;    */
+/* Typography */
+h1 {
+  background-color: var(--content-color);
+  padding: 0.25em;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1.6em;
 }
 
-/* p {
-    background-color: var(--content-color);
-    font-family: "Charter", serif;
-     border: solid 2px #444444;
-    font-size: 1.4em;
-    line-height: 1.35;
-    margin: auto;
-    margin-top: 0.5em;
-    margin-bottom: 1.0em;
-    max-width: 30em;
-    padding: 20px;
-    text-align: center;
-} 
-*/
+h2 {
+  background-color: var(--content-color);
+  padding: 0.25em;
+  margin: 0.5em auto;
+  text-align: center;
+  font-size: 1.2em;
+}
 
+/* Layout Components */
 div.post {
   background-color: var(--content-color);
   border: solid var(--border-color);
@@ -56,34 +51,13 @@ div.post {
   margin-left: auto;
   margin-bottom: 1.0em;
   margin-right: auto;
-  /* margin: 0.5em auto auto auto; */
   text-align: center;
-  /* font: 1.25em "IBM Plex Sans", sans-serif; */
   font-size: 1.25em;
   max-width: 60%;
-  /* width: 25em; */
 }
 
-div.post p {
-  text-align: left;
-  margin-top: 0.5em;
-  margin-left: 1.0em;
-  margin-bottom: 1.0em;
-  margin-right: auto;
-  /* font: 1.0em "IBM Plex Sans", sans-serif; */
-  font-size: 1.0em;
-}
-
-/* div.post pre code { */
-/* font: 0.5em "IBM Plex Mono", mono; */
-/* font-size: 0.5em; */
-
-/* } */
 pre {
-  /* background: #f4f4f4; */
   border: 1px solid #ddd;
-  border-left: 3px solid #f36d33;
-  /* color: #666; */
   page-break-inside: avoid;
   font-family: monospace;
   font-size: 15px;
@@ -97,40 +71,14 @@ pre {
   text-align: left;
 }
 
-div.experience {
-  background-color: var(--content-color);
-  border: solid var(--border-color);
-  /* padding: 0.25em; */
-  padding-left: 1.25em;
-  padding-top: auto;
-  padding-right: auto;
-  padding-bottom: auto;
-
-  margin-top: 1.0em;
-  margin-left: auto;
-  margin-bottom: 1.0em;
-  margin-right: auto;
-  /* margin: 0.5em auto auto auto; */
-  /* text-align: center; */
-  /* font: 1.25em "IBM Plex Sans", sans-serif; */
-  font: 1.25em;
-  max-width: 60%;
-  /* width: 25em; */
-}
-
 header {
   background-color: var(--content-color);
   border: solid var(--border-color);
   padding: 0.25em;
-  margin-top: 1.0em;
-  margin-left: auto;
-  margin-bottom: auto;
-  margin-right: auto;
+  margin: 1.0em auto auto;
   text-align: center;
-  /* font: 1.0em "IBM Plex Sans", sans-serif; */
   font-size: 1.0em;
   max-width: 50%;
-  /* width: 25em; */
 }
 
 footer {
@@ -138,53 +86,17 @@ footer {
   border: dashed var(--border-color);
   margin-top: auto;
   text-align: center;
-  /* font: 1.25em "IBM Plex Sans", sans-serif; */
   font-size: 1.25em
 }
 
+/* Navigation */
 nav {
   background-color: var(--content-color);
   border: dashed var(--border-color);
-  /* padding: 0.15em; */
-  margin-top: 1.0em;
-  margin-left: 0.5em;
-  margin-bottom: 0.5em;
-  margin-right: 0.5em;
+  margin: 1.0em 0.5em 0.5em;
   text-align: center;
-  /* font: 1.25em "IBM Plex Sans", sans-serif; */
   font-size: 1.25em;
   font-weight: 600;
-  /* max-width: 50%;
-    width: 25em; */
-}
-
-p.resume-link {
-  background-color: var(--content-color);
-  border: solid var(--border-color);
-  padding: 0.25em;
-  margin-top: 1.0em;
-  margin-left: auto;
-  margin-bottom: 1.0em;
-  margin-right: auto;
-  text-align: center;
-  /* font: 1.25em "IBM Plex Sans", sans-serif; */
-  font-size: 1.25em;
-  max-width: 25%;
-  /* width: 25em; */
-}
-
-#about {
-  background-color: var(--content-color);
-  border: solid var(--border-color);
-  padding: 0.25em;
-  margin-top: 1.0em;
-  margin-left: auto;
-  margin-bottom: 1.0em;
-  margin-right: auto;
-  text-align: center;
-  font-size: 1.25em;
-  max-width: 50%;
-  /* width: 25em; */
 }
 
 nav ul {
@@ -193,44 +105,17 @@ nav ul {
   justify-content: space-around;
 }
 
-h1 {
+#about {
   background-color: var(--content-color);
+  border: solid var(--border-color);
   padding: 0.25em;
-  margin-top: 0.0em;
-  margin-left: auto;
-  margin-bottom: 0.em;
-  margin-right: auto;
+  margin: 1.0em auto;
   text-align: center;
-  font-size: 1.6em;
+  font-size: 1.25em;
+  max-width: 50%;
 }
 
-h2 {
-  background-color: var(--content-color);
-  padding: 0.25em;
-  margin-top: 0.5em;
-  margin-left: auto;
-  margin-bottom: 0.5em;
-  margin-right: auto;
-  text-align: center;
-  font-size: 1.2em;
-}
-
-/* h1, h2 {
-    background-color: var(--content-color);
-    border: solid var(--border-color);
-    padding: 0.25em;
-    margin: 0.4em auto 0px auto;
-    text-align: center;
-    font: 1.5em "IBM Plex Sans", sans-serif;
-    max-width: 50%;
-    width: 25em;
-} */
-
-#container {
-  display: flex;
-  flex-flow: column wrap;
-}
-
+/* Links */
 a {
   color: var(--link-color);
   text-decoration: none;
@@ -241,12 +126,21 @@ a:hover {
   text-decoration: underline dotted;
 }
 
-/* a:visited {
-    color: var(--link-visited-color);
-    text-decoration: none;
-} */
-
 div.summary {
-
   background-color: var(--content-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+  .post,
+  .experience,
+  #about {
+    max-width: 90%;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
 }
