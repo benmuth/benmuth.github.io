@@ -1,4 +1,12 @@
 {:title "About"}
 
 %%%
-I started learning programming in early 2020 from my brother and I've been self-taught since. I'm interested in the craft of coding, learning how to do good work, and creating software that is sympathetic to both machines and the people that use them. My interests and curiosities tend to range widely. Right now, I'm working on things ranging from [simple web apps](https://piano.benmuth.com) to a [novel data interchange format](https://github.com/benmuth/go-muon) and a [collaborative terminal text editor](https://github.com/burntcarrot/pairpad)
+I'm a self taught programmer who's driven by a ceaseless curiosity to understand more about how these machines and systems which underlie daily life work. 
+
+I'm compelled by the engineering side of software design; the part that forces you to consider goals and tradeoffs, and requires deep domain knowledge to correctly make tricky technical decisions.
+
+I believe computers still have tremendous untapped potential, both for casual users and experts alike.
+
+I enjoy learning about distributed systems, low-level programming, new languages, networking, and more.
+
+Outside of programming, I love cooking and sharing food with others. In between programming, I worked as a cook at a series of Manhattan restaurants for the better part of a year. I also enjoy drawing and basketball, and used to play the drums (I'd like to start again!).

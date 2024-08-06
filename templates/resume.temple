@@ -1,3 +1,14 @@
+
 {% (bagatto/include "/templates/base-top") %}
+
+<h3>
+<a href="static/Resume-2023.pdf">Resume</a>
+</h3>
+
+<div>
+{% 
+	(print (bagatto/markdown->html (get-in args [:_item :body])))
+%}
+</div>
 
 {% (bagatto/include "/templates/base-bottom") %}

@@ -8,6 +8,7 @@
                 :attrs bagatto/parse-base}
            :resume-pdf {:src (bagatto/* "assets/Resume-2023.pdf")
                         :attrs bagatto/parse-base}
+           :resume {:src (bagatto/slurp-* "pages/resume.md")}
            :about {:src "pages/about.md"}
            :blog-posts {:src (bagatto/slurp-* "pages/blog/*.md")}})
 
@@ -21,7 +22,9 @@
                   :out (bagatto/renderer "/templates/blog")}
            :resume-pdf {:each :resume-pdf
                         :dest (bagatto/path-copier "static")}
-           :resume {:dest "resume.html" :out (bagatto/renderer "/templates/resume")}
+           :resume {:each :resume
+                    :dest "resume.html"
+                    :out (bagatto/renderer "/templates/resume")}
            :posts {:each :blog-posts
                    :dest (bagatto/%p "posts" '%i :title '% ".html")
                    :out (bagatto/renderer "/templates/post")}
