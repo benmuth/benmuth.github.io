@@ -1,8 +1,8 @@
 {% (bagatto/include "/templates/base-top") %}
 
-<h1>
+<h2>
 {% (print (get-in args [:_item :title])) %}
-</h1>
+</h2>
 
 <div class=post>
 {% 

@@ -1,5 +1,10 @@
 {% (bagatto/include "/templates/base-top") %}
 
-<h1>Test</h1>
+<div id="welcome">
+{%
+	(print (bagatto/markdown->html "Hi, I'm Ben! This is my website. Pardon any mess, it's still under construction. This site is being built with [Bagatto](https://bagatto.co)."))
+%}
+</div>
+
 
 {% (bagatto/include "/templates/base-bottom") %}
