@@ -10,7 +10,6 @@ deploy:
 install:
     pnpm install -g http-server livereload
 
-
 set working-directory := 'site'
 # Serve HTTP with live reloading
 # (make sure "http://localhost:35729/livereload.js\" is in the HTML file)
