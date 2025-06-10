@@ -1,23 +1,60 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
-	<title>{{(get-in args [:meta :title])}}</title>
-	<link rel="stylesheet" type="text/css" href="../static/main.css">
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>blog</title>
+	<title>{{(get-in args [:meta :title])}}</title>
+	<meta name="description" content="Ben Muthalaly's personal website and blog">
+	<style>
+		/* Font face declarations for better loading performance */
+		@font-face {
+			font-family: 'Charter';
+			src: url('/static/fonts/charter_regular.woff2') format('woff2');
+			font-weight: 400;
+			font-style: normal;
+			font-display: swap;
+		}
+		
+		@font-face {
+			font-family: 'Charter';
+			src: url('/static/fonts/charter_bold.woff2') format('woff2');
+			font-weight: 700;
+			font-style: normal;
+			font-display: swap;
+		}
+		
+		@font-face {
+			font-family: 'IBM Plex Sans';
+			src: url('/static/fonts/IBMPlexSans-Bold-Latin1.woff2') format('woff2');
+			font-weight: 700;
+			font-style: normal;
+			font-display: swap;
+		}
+		
+		@font-face {
+			font-family: 'IBM Plex Mono';
+			src: url('/static/fonts/IBMPlexMono-Regular-Latin1.woff2') format('woff2');
+			font-weight: 400;
+			font-style: normal;
+			font-display: swap;
+		}
+	</style>
+	<link rel="stylesheet" href="/static/main.css">
 </head>
-
 <body>
-	<nav>
-		<ul>
-		<a href="/about.html">about</a>
-		<a href="/blog.html">blog</a>
-		<a href="/resume.html">resume</a>
-		</ul>
-	</nav>
+	<div class="site-layout">
+		<header class="site-header">
+			<a href="/index.html" class="site-name">Ben Muthalaly</a>
+			<nav class="site-nav" aria-label="Main navigation">
+				<ul>
+					<li><a href="/about.html">About</a></li>
+					<li><a href="/blog.html">Blog</a></li>
+					<li><a href="/til.html">TIL</a></li>
+					<li><a href="/resume.html">Resume</a></li>
+				</ul>
+			</nav>
+		</header>
+		<div class="site-container">
+			<main class="main-content">
 	
 

@@ -1,7 +1,7 @@
 {:title "About"}
 
 %%%
-I'm a self taught programmer who's driven by a ceaseless curiosity to understand more about how these machines and systems which underlie daily life work. 
+I'm a self taught programmer who's driven by a curiosity to understand more about how these machines and systems which underlie daily life work.
 
 I'm most compelled by the engineering side of software design; the part that forces you to carefully consider goals and trade-offs, and requires deep domain knowledge to correctly make tricky technical decisions.
 

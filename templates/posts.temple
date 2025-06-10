@@ -1,20 +1,21 @@
-<div class="grid-body">
-  <ul class="posts">
-  {% (loop [post :in (args :blog-posts)]
-    (when (not (post :draft))
-      (print "<li>")
-      (print "<a>")
-      (print (bagatto/format
-      		`<h2 class="post-listing"><a href="posts/%s.html">%s</a></h2>`
-                (bagatto/slugify (post :title))
-                (post :title))))
-      (print "</a>")
-      (print "</li>")
-      (print "<div class='summary'>")
-      (print (post :summary))
-      (print "</div>")
-    )
-  %}
-  </ul>
-</div>
+<section class="blog-posts">
+    <h1>Latest Posts</h1>
+    <ul class="post-list">
+        {% (loop [post :in (args :blog-posts)]
+          (when (not (post :draft))
+            (print "<li class=\"post-item\">")
+            (print "<h2 class=\"post-title\">")
+            (print (bagatto/format
+                      `<a href="posts/%s.html">%s</a>`
+                      (bagatto/slugify (post :title))
+                      (post :title)))
+            (print "</h2>")
+            (when (post :excerpt)
+              (print (bagatto/format
+                      `<p class="post-excerpt">%s</p>`
+                      (post :excerpt))))
+            (print "</li>")
+          )) %}
+    </ul>
+</section>
 

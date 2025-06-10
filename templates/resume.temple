@@ -1,13 +1,15 @@
 {% (bagatto/include "/templates/base-top") %}
 
-<h2>
-<a href="static/Resume-2023.pdf">Single page PDF</a>
-</h2>
-
-<div>
-{% 
-	(print (bagatto/markdown->html (get-in args [:_item :body])))
-%}
+<div class="resume-content">
+	<div class="pdf-link-section">
+		<a href="/static/Resume-2023.pdf" class="pdf-link">Single page PDF</a>
+	</div>
+	
+	<div class="resume-text">
+		{%
+			(print (bagatto/markdown->html (get-in args [:_item :body])))
+		%}
+	</div>
 </div>
 
 {% (bagatto/include "/templates/base-bottom") %}

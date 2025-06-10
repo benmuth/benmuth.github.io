@@ -14,8 +14,8 @@ set working-directory := 'site'
 # Serve HTTP with live reloading
 # (make sure "http://localhost:35729/livereload.js\" is in the HTML file)
 serve:
-    bash -c 'trap "kill $(jobs -p)" EXIT; \
-           http-server -o -c-1 & \
-           livereload & \
-           echo "Ensure <script src=\></script> is in your HTML file." && \
-           wait'
+    bash -c 'cleanup() { kill $(jobs -p); }; \
+             trap cleanup EXIT; \
+             http-server -o -c-1 & \
+             livereload & \
+             wait'

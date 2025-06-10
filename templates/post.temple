@@ -1,13 +1,12 @@
 {% (bagatto/include "/templates/base-top") %}
 
-<h2>
-{% (print (get-in args [:_item :title])) %}
-</h2>
-
-<div class=post>
-{% 
-	(print (bagatto/markdown->html (get-in args [:_item :body])))
-%}
-</div>
+<article class="post-content">
+	<header>
+		<h1>{% (print (get-in args [:_item :title])) %}</h1>
+	</header>
+	{%
+		(print (bagatto/markdown->html (get-in args [:_item :body])))
+	%}
+</article>
 
 {% (bagatto/include "/templates/base-bottom") %}
