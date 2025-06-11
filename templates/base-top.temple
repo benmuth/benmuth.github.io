@@ -12,7 +12,7 @@
 			src: url('/static/fonts/charter_regular.woff2') format('woff2');
 			font-weight: 400;
 			font-style: normal;
-			font-display: swap;
+			font-display: optional;
 		}
 		
 		@font-face {
@@ -20,7 +20,7 @@
 			src: url('/static/fonts/charter_bold.woff2') format('woff2');
 			font-weight: 700;
 			font-style: normal;
-			font-display: swap;
+			font-display: optional;
 		}
 		
 		@font-face {
@@ -28,7 +28,7 @@
 			src: url('/static/fonts/IBMPlexSans-SemiBold-Latin1.woff2') format('woff2');
 			font-weight: 700;
 			font-style: normal;
-			font-display: swap;
+			font-display: optional;
 		}
 		
 		@font-face {
@@ -36,10 +36,14 @@
 			src: url('/static/fonts/IBMPlexMono-Regular-Latin1.woff2') format('woff2');
 			font-weight: 400;
 			font-style: normal;
-			font-display: swap;
+			font-display: optional;
 		}
 	</style>
-	<link rel="stylesheet" href="/static/main.css">
+	
+	<style>
+		/* Inlined CSS for performance */
+		{- (get-in args [:css 0 :contents]) -}
+	</style>
 </head>
 <body>
 	<div class="site-layout">

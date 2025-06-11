@@ -112,7 +112,7 @@ FILE STRUCTURE:
   /* Borders - warm beige-gray */
   --color-accent-primary: #007acc;
   /* Links and accents - blue */
-  --color-accent-secondary: #af114788;
+  --color-accent-secondary: #940c3788;
   /* Link hover - scarlet */
 }
 
@@ -206,6 +206,15 @@ body {
   /* Ensure it stays above other content */
 }
 
+.site-header a,
+.site-header a:visited {
+  text-shadow: none;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  /* Smooth color transition */
+}
+
 /* Site name/logo link at top of navigation */
 .site-name {
   display: block;
@@ -216,31 +225,16 @@ body {
   /* Bold for strong brand presence */
   font-size: calc(1rem + 0.1vw);
   /* Responsive sizing */
-  color: var(--color-text-primary);
-  /* Primary text color from palette */
-  text-decoration: none;
-  /* No underline */
   margin-bottom: 1rem;
   /* Space before navigation list */
   padding-bottom: 0.75rem;
   /* Internal padding */
   border-bottom: 1px solid var(--color-border);
   /* Border color from palette */
-  transition: color 0.2s ease;
-  /* Smooth color transition */
   text-rendering: optimizeLegibility;
   /* Enhanced text rendering */
   font-feature-settings: 'kern' 1;
   /* Enable kerning */
-}
-
-.site-name:visited {
-  color: var(--color-text-primary);
-}
-
-.site-name:hover {
-  color: var(--color-accent-primary);
-  /* Accent color from palette */
 }
 
 /* Navigation list styled vertically */
@@ -273,7 +267,7 @@ body {
   /* Secondary text color from palette */
   text-decoration: none;
   /* Clean look without underlines */
-  font-weight: 400;
+  font-weight: 700;
   /* Normal weight */
   font-size: calc(0.9rem + 0.05vw);
   /* Responsive sizing, slightly smaller than site name */
