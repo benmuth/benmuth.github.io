@@ -440,7 +440,7 @@ a:hover {
 
 /* Post content container */
 .post-content {
-  max-width: none;
+  max-width: 600px;
   /* Allow full width within site-container */
   margin-bottom: 3rem;
   /* Space before footer */
