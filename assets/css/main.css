@@ -186,6 +186,8 @@ body {
 
 /* Fixed navigation box in upper left corner */
 .site-header {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-weight: 700;
   position: absolute;
   /* Stay in place during scroll */
   top: 1rem;
@@ -204,25 +206,36 @@ body {
   /* Internal spacing */
   z-index: 100;
   /* Ensure it stays above other content */
+  transition: color 0.2s ease;
+  transition: text-shadow 0.2s ease;
+  /* Smooth hover transition */
+  text-rendering: optimizeLegibility;
+  /* Enhanced text rendering */
+  font-feature-settings: 'kern' 1;
+  /* Enable kerning */
 }
 
-.site-header a,
+.site-header a {
+  text-shadow: none;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: text-shadow 0.2s ease;
+}
+
+.site-header a:hover {
+  text-shadow: -2px -2px 1px var(--color-accent-secondary);
+}
+
 .site-header a:visited {
   text-shadow: none;
   color: var(--color-text-primary);
   text-decoration: none;
-  transition: color 0.2s ease;
-  /* Smooth color transition */
 }
 
 /* Site name/logo link at top of navigation */
 .site-name {
   display: block;
   /* Full width clickable area */
-  font-family: 'IBM Plex Sans', system-ui, sans-serif;
-  /* Interface font for site branding */
-  font-weight: 700;
-  /* Bold for strong brand presence */
   font-size: calc(1rem + 0.1vw);
   /* Responsive sizing */
   margin-bottom: 1rem;
@@ -231,10 +244,6 @@ body {
   /* Internal padding */
   border-bottom: 1px solid var(--color-border);
   /* Border color from palette */
-  text-rendering: optimizeLegibility;
-  /* Enhanced text rendering */
-  font-feature-settings: 'kern' 1;
-  /* Enable kerning */
 }
 
 /* Navigation list styled vertically */
@@ -261,42 +270,10 @@ body {
 .site-nav a {
   display: block;
   /* Full width clickable area */
-  font-family: 'IBM Plex Sans', system-ui, sans-serif;
-  /* Interface font for navigation */
-  color: var(--color-text-secondary);
-  /* Secondary text color from palette */
-  text-decoration: none;
-  /* Clean look without underlines */
-  font-weight: 700;
-  /* Normal weight */
   font-size: calc(0.9rem + 0.05vw);
   /* Responsive sizing, slightly smaller than site name */
   padding: 0.25rem 0;
   /* Small vertical padding for click area */
-  transition: color 0.2s ease;
-  /* Smooth hover transition */
-  text-rendering: optimizeLegibility;
-  /* Enhanced text rendering */
-  font-feature-settings: 'kern' 1;
-  /* Enable kerning */
-}
-
-.site-nav a:hover,
-.site-nav a:focus {
-  color: var(--color-accent-secondary);
-  /* Brand color on interaction */
-  outline: none;
-  /* Remove default focus outline */
-}
-
-.site-nav a:visited {
-  color: var(--color-text-secondary);
-  /* Keep original color for visited navigation links */
-}
-
-.site-nav a:visited:hover {
-  color: var(--color-accent-secondary);
-  /* Same hover behavior for visited navigation links */
 }
 
 /* =================================
@@ -393,14 +370,7 @@ p {
 /* Global link styling with sophisticated text shadow effects */
 a {
   color: var(--color-accent-primary);
-  /* Blue accent color from palette */
-  /* text-decoration: underline; */
-  /* Underlines improve accessibility */
-  /* text-decoration-thickness: 1px; */
-  /* Subtle underline thickness */
-  /* text-underline-offset: 2px; */
   text-decoration: none;
-  /* Space between text and underline */
   text-shadow: -1px -1px 1px var(--color-accent-secondary);
   /* Subtle red shadow on blue links */
   transition: text-shadow 0.2s ease, color 0.2s ease;
@@ -742,7 +712,7 @@ a:visited:hover {
 .pdf-link {
   display: inline-block;
   /* Allows padding and margins */
-  background: var(--color-accent-primary);
+  background: var(--color-text-primary);
   /* Accent color from palette */
   color: white !important;
   /* Override link color (ensure white text) */
