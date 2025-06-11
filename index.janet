@@ -10,9 +10,11 @@
                    :attrs bagatto/parse-base}
            :resume-pdf {:src (bagatto/* "assets/Resume-2023.pdf")
                         :attrs bagatto/parse-base}
+           :bullet-svg {:src (bagatto/* "assets/bullet.svg")
+                        :attrs bagatto/parse-base}
            :resume {:src (bagatto/slurp-* "pages/resume.md")}
            :about {:src "pages/about.md"}
-           :til {:src (bagatto/slurp-* "pages/til.md")}
+           :notes {:src (bagatto/slurp-* "pages/notes.md")}
            :blog-posts {:src (bagatto/slurp-* "pages/blog/*.md")}})
 
 (def site {:static {:each :css
@@ -27,12 +29,14 @@
                           :dest (bagatto/path-copier "static/fonts")}
            :resume-pdf {:each :resume-pdf
                         :dest (bagatto/path-copier "static")}
+           :bullet-svg-static {:each :bullet-svg
+                               :dest (bagatto/path-copier "static")}
            :resume {:each :resume
                     :dest "resume.html"
                     :out (bagatto/renderer "/templates/resume")}
-           :til {:each :til
-                 :dest "til.html"
-                 :out (bagatto/renderer "/templates/til")}
+           :notes {:each :notes
+                   :dest "notes.html"
+                   :out (bagatto/renderer "/templates/notes")}
            :posts {:each :blog-posts
                    :dest (bagatto/%p "posts" '%i :title '% ".html")
                    :out (bagatto/renderer "/templates/post")}

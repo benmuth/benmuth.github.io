@@ -47,12 +47,17 @@ TYPOGRAPHY:
 - Line height 1.6 for body text, 1.3 for headings
 - Font weights: 400 (normal), 700 (bold)
 
-COLORS (Use these exact values):
-- Primary blue: #007acc (links, accents, brand color)
-- Text colors: #333 (headings), #555 (secondary), #666 (muted)
-- Borders: #e5e5e5 (light gray for subtle divisions)
-- Code/background: #f8f8f8 (very light gray)
-- White: #fff, Black text: #333 (better than pure black for readability)
+COLORS (CSS Custom Properties):
+All colors are defined as CSS variables in the :root selector and should be referenced using var() function:
+- var(--color-bg-main): #fefaf4 (main background - warm off-white)
+- var(--color-bg-shaded): #f9f4ee (shaded sections - warm light gray)
+- var(--color-text-primary): #565276 (primary text - warm purple-gray)
+- var(--color-text-secondary): #787591 (secondary/light text)
+- var(--color-border): #e9e3e1 (borders - warm beige-gray)
+- var(--color-accent-primary): #007acc (links and accents - blue)
+- var(--color-accent-secondary): #dc143c (link hover - scarlet)
+
+NEVER use hardcoded hex values - always reference the CSS variables!
 
 COMPONENT ARCHITECTURE:
 - Each page/component has its own section in this file
@@ -82,12 +87,34 @@ FILE STRUCTURE:
 4. Main content area
 5. Typography defaults (applies to all content)
 6. Links (global link styling)
-7. Component-specific styles (blog, resume, TIL, etc.)
+7. Component-specific styles (blog, resume, notes, etc.)
 8. Footer
 9. Responsive overrides (mobile-first approach)
 
 ====================================
 */
+
+/* =================================
+   COLOR PALETTE (CSS CUSTOM PROPERTIES)
+   ================================= */
+
+:root {
+  /* Core color palette - all colors should reference these variables */
+  --color-bg-main: #fefaf4;
+  /* Main background - warm off-white */
+  --color-bg-shaded: #f9f4ee;
+  /* Shaded sections - warm light gray */
+  --color-text-primary: #565276;
+  /* Primary text - warm purple-gray */
+  --color-text-secondary: #787591;
+  /* Secondary/light text */
+  --color-border: #e9e3e1;
+  /* Borders - warm beige-gray */
+  --color-accent-primary: #007acc;
+  /* Links and accents - blue */
+  --color-accent-secondary: #af114788;
+  /* Link hover - scarlet */
+}
 
 /* =================================
    RESET AND BASE STYLES
@@ -115,12 +142,12 @@ html {
 body {
   /* Charter serif font for optimal body text readability */
   font-family: 'Charter', Georgia, 'Times New Roman', serif;
-  line-height: 1.6;
-  /* Optimal reading line height (not too tight, not too loose) */
-  color: #333;
-  /* Slightly softer than pure black for better readability */
-  background-color: #fff;
-  /* Explicit white background (some browsers default to off-white) */
+  line-height: 1.3;
+  /* 130% of font size using unitless value for optimal readability */
+  color: var(--color-text-primary);
+  /* Primary text color from palette */
+  background-color: var(--color-bg-main);
+  /* Main background color from palette */
   text-rendering: optimizeLegibility;
   /* Enhanced text rendering for better kerning and ligatures */
   font-feature-settings: 'kern' 1;
@@ -159,24 +186,22 @@ body {
 
 /* Fixed navigation box in upper left corner */
 .site-header {
-  position: fixed;
+  position: absolute;
   /* Stay in place during scroll */
   top: 1rem;
   /* Distance from top of viewport */
   left: 1rem;
   /* Distance from left of viewport */
-  width: 160px;
+  width: 200px;
   /* Fixed width for navigation box */
-  background: #fff;
-  /* White background */
-  border: 1px solid #e5e5e5;
-  /* Subtle border around nav box */
+  background: var(--color-bg-main);
+  /* Main background from palette */
+  border: 1px solid var(--color-border);
+  /* Border color from palette */
   border-radius: 8px;
   /* Rounded corners for modern look */
   padding: 1rem;
   /* Internal spacing */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  /* Subtle shadow for depth */
   z-index: 100;
   /* Ensure it stays above other content */
 }
@@ -191,16 +216,16 @@ body {
   /* Bold for strong brand presence */
   font-size: calc(1rem + 0.1vw);
   /* Responsive sizing */
-  color: #333;
-  /* Standard text color */
+  color: var(--color-text-primary);
+  /* Primary text color from palette */
   text-decoration: none;
   /* No underline */
   margin-bottom: 1rem;
   /* Space before navigation list */
   padding-bottom: 0.75rem;
   /* Internal padding */
-  border-bottom: 1px solid #e5e5e5;
-  /* Separator line */
+  border-bottom: 1px solid var(--color-border);
+  /* Border color from palette */
   transition: color 0.2s ease;
   /* Smooth color transition */
   text-rendering: optimizeLegibility;
@@ -209,9 +234,13 @@ body {
   /* Enable kerning */
 }
 
+.site-name:visited {
+  color: var(--color-text-primary);
+}
+
 .site-name:hover {
-  color: #007acc;
-  /* Brand color on hover */
+  color: var(--color-accent-primary);
+  /* Accent color from palette */
 }
 
 /* Navigation list styled vertically */
@@ -240,8 +269,8 @@ body {
   /* Full width clickable area */
   font-family: 'IBM Plex Sans', system-ui, sans-serif;
   /* Interface font for navigation */
-  color: #555;
-  /* Slightly muted text color */
+  color: var(--color-text-secondary);
+  /* Secondary text color from palette */
   text-decoration: none;
   /* Clean look without underlines */
   font-weight: 400;
@@ -260,10 +289,20 @@ body {
 
 .site-nav a:hover,
 .site-nav a:focus {
-  color: #007acc;
+  color: var(--color-accent-secondary);
   /* Brand color on interaction */
   outline: none;
   /* Remove default focus outline */
+}
+
+.site-nav a:visited {
+  color: var(--color-text-secondary);
+  /* Keep original color for visited navigation links */
+}
+
+.site-nav a:visited:hover {
+  color: var(--color-accent-secondary);
+  /* Same hover behavior for visited navigation links */
 }
 
 /* =================================
@@ -293,10 +332,8 @@ h5,
 h6 {
   font-family: 'IBM Plex Sans', system-ui, sans-serif;
   /* Interface font for all headings */
-  margin-bottom: 1rem;
-  /* Consistent spacing after headings */
   line-height: 1.3;
-  /* Tighter line height for headings (improves readability) */
+  /* 130% of font size using unitless value */
   font-weight: 700;
   /* Bold for strong hierarchy */
   text-rendering: optimizeLegibility;
@@ -307,65 +344,96 @@ h6 {
 
 /* H1 is typically page title - center and emphasize */
 h1 {
-  font-size: calc(1.8rem + 0.5vw);
-  /* Responsive sizing for page titles */
+  font-size: calc(1.4rem + 0.3vw);
+  /* Small increase from body text with responsive sizing */
   text-align: center;
   /* Center page titles for impact */
-  margin-bottom: 2rem;
-  /* Extra space after main title */
+  margin-top: 2.5rem;
+  /* Larger top margin for visual separation */
+  margin-bottom: 1.5rem;
+  /* Smaller bottom margin, but larger than paragraph spacing */
 }
 
 /* H2 for major sections */
 h2 {
-  font-size: calc(1.3rem + 0.3vw);
-  /* Responsive sizing for section headings */
-  margin-top: 2rem;
-  /* Extra space before new sections */
+  font-size: calc(1.3rem + 0.2vw);
+  /* Small increase from body text with responsive sizing */
+  margin-top: 2.25rem;
+  /* Larger top margin for visual separation */
+  margin-bottom: 1.25rem;
+  /* Smaller bottom margin, but larger than paragraph spacing */
 }
 
 /* H3 for subsections */
 h3 {
-  font-size: calc(1.1rem + 0.2vw);
-  /* Responsive sizing for subsection headings */
-  margin-top: 1.5rem;
-  /* Space before subsections */
+  font-size: calc(1.2rem + 0.1vw);
+  /* Small increase from body text with responsive sizing */
+  margin-top: 2rem;
+  /* Larger top margin for visual separation */
+  margin-bottom: 1rem;
+  /* Smaller bottom margin, but larger than paragraph spacing */
 }
 
 /* H4, H5, H6 for smaller headings */
 h4,
 h5,
 h6 {
-  font-size: calc(1rem + 0.1vw);
-  /* Responsive sizing for smaller headings */
-  margin-top: 1.25rem;
-  /* Space before smaller headings */
+  font-size: calc(1.1rem + 0.05vw);
+  /* Small increase from body text with responsive sizing */
+  margin-top: 1.0rem;
+  /* Larger top margin for visual separation */
+  margin-bottom: 1.0rem;
+  /* Smaller bottom margin, but larger than paragraph spacing */
 }
 
 /* Standard paragraph spacing */
 p {
-  margin-bottom: 1rem;
-  /* Consistent paragraph spacing throughout */
+  margin-bottom: 0.6em;
+  /* 75% of body text size using em units for responsive scaling */
 }
 
 /* =================================
    LINKS
    ================================= */
 
-/* Global link styling - accessible and modern */
+/* Global link styling with sophisticated text shadow effects */
 a {
-  color: #007acc;
-  /* Brand blue for recognition */
-  text-decoration: underline;
+  color: var(--color-accent-primary);
+  /* Blue accent color from palette */
+  /* text-decoration: underline; */
   /* Underlines improve accessibility */
-  text-decoration-thickness: 1px;
+  /* text-decoration-thickness: 1px; */
   /* Subtle underline thickness */
-  text-underline-offset: 2px;
+  /* text-underline-offset: 2px; */
+  text-decoration: none;
   /* Space between text and underline */
+  text-shadow: -1px -1px 1px var(--color-accent-secondary);
+  /* Subtle red shadow on blue links */
+  transition: text-shadow 0.2s ease, color 0.2s ease;
+  /* Smooth transition for shadow and color */
 }
 
 a:hover {
+  color: var(--color-text-primary);
+  /* Keep blue color on hover */
   text-decoration-thickness: 2px;
   /* Thicker underline on hover for feedback */
+  text-shadow: -2px -2px 1px var(--color-accent-secondary);
+  /* More noticeable red shadow on hover */
+}
+
+a:visited {
+  color: var(--color-accent-secondary);
+  /* Red color for visited links */
+  text-shadow: 0 0 1px var(--color-text-primary);
+  /* Subtle blue shadow on red links */
+}
+
+a:visited:hover {
+  color: var(--color-accent-secondary);
+  /* Keep red color on visited hover */
+  text-shadow: 0 0 3px var(--color-accent-primary);
+  /* More noticeable blue shadow on visited hover */
 }
 
 /* =================================
@@ -386,10 +454,10 @@ a:hover {
 
 /* Individual post items with clear separation */
 .post-item {
-  padding: 1.5rem 0;
+  padding: 1rem 0;
   /* Generous vertical spacing */
-  border-bottom: 1px solid #e5e5e5;
-  /* Subtle separator between posts */
+  border-bottom: 1px solid var(--color-border);
+  /* Border color from palette */
 }
 
 .post-item:last-child {
@@ -401,27 +469,25 @@ a:hover {
 .post-title {
   font-size: 1.25rem;
   /* Larger than body text but smaller than h1 */
-  margin-bottom: 0.5rem;
-  /* Tight spacing to post meta/excerpt */
 }
 
 /* Post title links use hover color change instead of underlines */
 .post-title a {
-  color: #333;
-  /* Start with regular text color */
+  color: var(--color-text-primary);
+  /* Primary text color from palette */
   text-decoration: none;
   /* Clean look in listings */
 }
 
 .post-title a:hover {
-  color: #007acc;
+  color: var(--color-accent-secondary);
   /* Brand color on hover for feedback */
 }
 
 /* Metadata styling (dates, authors, etc.) */
 .post-meta {
-  color: #666;
-  /* Muted color for secondary information */
+  color: var(--color-text-secondary);
+  /* Secondary text color from palette */
   font-size: 0.9rem;
   /* Slightly smaller than body text */
   margin-bottom: 0.5rem;
@@ -430,8 +496,8 @@ a:hover {
 
 /* Post excerpts use secondary text color */
 .post-excerpt {
-  color: #555;
-  /* Secondary text color for excerpts */
+  color: var(--color-text-secondary);
+  /* Secondary text color from palette */
 }
 
 /* =================================
@@ -452,69 +518,72 @@ a:hover {
   /* Space before post content */
   padding-bottom: 1rem;
   /* Internal padding */
-  border-bottom: 1px solid #e5e5e5;
-  /* Separator line */
+  border-bottom: 1px solid var(--color-border);
+  /* Border color from palette */
 }
 
 /* Post titles are left-aligned and larger than page titles */
 .post-content h1 {
   text-align: left;
   /* Left-align for reading flow */
-  margin-bottom: 0.5rem;
-  /* Tighter spacing in post context */
-  font-size: calc(2rem + 0.6vw);
-  /* Responsive sizing for post titles */
+  margin-top: 2.5rem;
+  /* Larger top margin for visual separation */
+  margin-bottom: 1.5rem;
+  /* Smaller bottom margin, but larger than paragraph spacing */
+  font-size: calc(1.4rem + 0.3vw);
+  /* Small increase from body text with responsive sizing */
 }
 
 /* Section headings within posts */
 .post-content h2 {
-  font-size: calc(1.5rem + 0.4vw);
-  /* Responsive sizing for post sections */
-  margin-top: 2.5rem;
-  /* Extra space before new sections */
-  margin-bottom: 1rem;
-  /* Standard spacing after */
-  color: #333;
-  /* Explicit color (inheritance safety) */
+  font-size: calc(1.3rem + 0.2vw);
+  /* Small increase from body text with responsive sizing */
+  margin-top: 2.25rem;
+  /* Larger top margin for visual separation */
+  margin-bottom: 1.25rem;
+  /* Smaller bottom margin, but larger than paragraph spacing */
+  color: var(--color-text-primary);
+  /* Primary text color from palette */
 }
 
 .post-content h3 {
-  font-size: calc(1.3rem + 0.3vw);
-  /* Responsive sizing for post subsections */
+  font-size: calc(1.2rem + 0.1vw);
+  /* Small increase from body text with responsive sizing */
   margin-top: 2rem;
-  /* Less space than h2 */
+  /* Larger top margin for visual separation */
   margin-bottom: 1rem;
-  /* Standard spacing */
-  color: #333;
-  /* Consistent with h2 */
+  /* Smaller bottom margin, but larger than paragraph spacing */
+  color: var(--color-text-primary);
+  /* Primary text color from palette */
 }
 
 .post-content h4,
 .post-content h5,
 .post-content h6 {
-  font-size: calc(1.1rem + 0.2vw);
-  /* Responsive sizing for smaller post headings */
-  margin-top: 1.5rem;
-  /* Progressively less space */
-  margin-bottom: 0.75rem;
-  /* Tighter bottom spacing */
-  color: #333;
+  font-size: calc(1.1rem + 0.05vw);
+  /* Small increase from body text with responsive sizing */
+  margin-top: 1.0rem;
+  /* Larger top margin for visual separation */
+  margin-bottom: 0.5rem;
+  /* Smaller bottom margin, but larger than paragraph spacing */
+  color: var(--color-text-primary);
   /* Consistent color */
 }
 
 /* Enhanced paragraph spacing and line height for reading */
 .post-content p {
-  margin-bottom: 1.25rem;
-  /* Slightly more than default for reading */
-  line-height: 1.7;
-  /* Optimal for longer-form content */
+  margin-top: 0.2em;
+  margin-bottom: 0.4em;
+  /* 75% of body text size using em units for responsive scaling */
+  line-height: 1.3;
+  /* 130% of font size using unitless value */
 }
 
 /* List styling within posts */
 .post-content ul,
 .post-content ol {
-  margin-bottom: 1.25rem;
-  /* Match paragraph spacing */
+  margin-bottom: 0.75em;
+  /* Match paragraph spacing - 75% of body text size */
   padding-left: 1.5rem;
   /* Standard indentation */
 }
@@ -526,24 +595,28 @@ a:hover {
 
 /* Code blocks with syntax highlighting preparation */
 .post-content pre {
-  background: #f8f8f8;
-  /* Light gray background for contrast */
-  border: 1px solid #e5e5e5;
-  /* Subtle border */
+  background: var(--color-bg-shaded);
+  /* Shaded background from palette */
+  border: 1px solid var(--color-border);
+  /* Border color from palette */
   border-radius: 6px;
   /* Rounded corners for modern look */
-  padding: 1.25rem;
-  /* Generous padding for readability */
+  padding: 1rem;
+  /* Compact padding for better density */
   overflow-x: auto;
   /* Horizontal scroll for long code */
-  margin: 1.5rem 0;
-  /* Space above and below */
-  font-size: calc(0.8rem + 0.1vw);
-  /* Responsive sizing for code blocks */
+  margin: 1.5rem -1rem;
+  /* Break out of post-content padding to use full site-container width */
+  width: calc(100% + 2rem);
+  /* Full width plus the padding we broke out of */
+  max-width: calc(800px + 2rem);
+  /* Match main-content max-width plus padding */
+  font-size: calc(0.7rem + 0.05vw);
+  /* Smaller responsive sizing for code blocks */
   font-family: 'IBM Plex Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   /* IBM Plex Mono for code blocks */
-  line-height: 1.5;
-  /* Optimal for code readability */
+  line-height: 1.2;
+  /* Tighter line height for code density */
   text-rendering: optimizeLegibility;
   /* Enhanced text rendering */
   font-feature-settings: 'kern' 1;
@@ -552,14 +625,14 @@ a:hover {
 
 /* Inline code styling */
 .post-content code {
-  background: #f8f8f8;
-  /* Match code block background */
+  background: var(--color-bg-shaded);
+  /* Shaded background from palette */
   padding: 0.2rem 0.4rem;
   /* Minimal padding for inline context */
   border-radius: 3px;
   /* Slight rounding */
-  font-size: calc(0.85rem + 0.05vw);
-  /* Responsive sizing for inline code */
+  font-size: calc(0.8rem + 0.03vw);
+  /* Slightly smaller responsive sizing for inline code */
   font-family: 'IBM Plex Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   /* IBM Plex Mono for inline code */
   text-rendering: optimizeLegibility;
@@ -580,18 +653,18 @@ a:hover {
 
 /* Blockquotes for highlighting important content */
 .post-content blockquote {
-  border-left: 4px solid #007acc;
-  /* Brand color accent */
+  border-left: 4px solid var(--color-accent-primary);
+  /* Accent color from palette */
   padding-left: 1.5rem;
   /* Space after border */
   margin: 1.5rem 0;
   /* Space above and below */
   font-style: italic;
   /* Emphasize quoted content */
-  color: #555;
-  /* Secondary text color */
-  background: #f9f9f9;
-  /* Very light background */
+  color: var(--color-text-secondary);
+  /* Secondary text color from palette */
+  background: var(--color-bg-shaded);
+  /* Shaded background from palette */
   padding: 1rem 1.5rem;
   /* Full padding override */
   border-radius: 0 4px 4px 0;
@@ -626,13 +699,13 @@ a:hover {
   /* Generous cell padding */
   text-align: left;
   /* Left-align for readability */
-  border-bottom: 1px solid #e5e5e5;
-  /* Row separators */
+  border-bottom: 1px solid var(--color-border);
+  /* Border color from palette */
 }
 
 .post-content th {
-  background: #f8f8f8;
-  /* Header background */
+  background: var(--color-bg-shaded);
+  /* Shaded background from palette */
   font-weight: 600;
   /* Emphasize headers */
 }
@@ -667,16 +740,16 @@ a:hover {
   /* Space before resume content */
   padding-bottom: 1rem;
   /* Internal spacing */
-  border-bottom: 1px solid #e5e5e5;
-  /* Visual separator */
+  border-bottom: 1px solid var(--color-border);
+  /* Border color from palette */
 }
 
 /* PDF download link styled as prominent button */
 .pdf-link {
   display: inline-block;
   /* Allows padding and margins */
-  background: #007acc;
-  /* Brand color background */
+  background: var(--color-accent-primary);
+  /* Accent color from palette */
   color: white !important;
   /* Override link color (ensure white text) */
   padding: 0.75rem 1.5rem;
@@ -692,7 +765,7 @@ a:hover {
 }
 
 .pdf-link:hover {
-  background: #005c99;
+  background: var(--color-accent-secondary);
   /* Darker blue on hover */
   text-decoration: none;
   /* Ensure no underline on hover */
@@ -700,16 +773,16 @@ a:hover {
 
 /* Resume text content with enhanced readability */
 .resume-text {
-  line-height: 1.7;
-  /* Optimal for longer-form reading */
+  line-height: 1.3;
+  /* 130% of font size using unitless value */
 }
 
 /* =================================
-   TIL (TODAY I LEARNED) PAGE
+   NOTES PAGE
    ================================= */
 
-/* TIL page title */
-.til-content h1 {
+/* notes page title */
+.notes-content h1 {
   text-align: center;
   /* Center the main title */
   margin-bottom: 2rem;
@@ -717,52 +790,54 @@ a:hover {
 }
 
 /* Date headers with visual emphasis */
-.til-content h2 {
-  font-size: 1.5rem;
-  /* Clear hierarchy */
-  margin-top: 2.5rem;
-  /* Space before new day */
-  margin-bottom: 1rem;
-  /* Space before list */
+.notes-content h2 {
+  font-size: calc(1.1rem + 0.05vw);
+  /* Small increase from body text with responsive sizing */
+  margin-top: 2.25rem;
+  /* Larger top margin for visual separation */
+  margin-bottom: 1.25rem;
+  /* Smaller bottom margin, but larger than paragraph spacing */
   padding-bottom: 0.5rem;
   /* Space before border */
-  border-bottom: 2px solid #007acc;
-  /* Brand color underline */
-  color: #333;
+  border-bottom: 1px solid var(--color-border);
+  /* Primary text color from palette */
+  color: var(--color-text-secondary);
   /* Consistent heading color */
 }
 
 /* First date section needs less top margin */
-.til-content h2:first-of-type {
+.notes-content h2:first-of-type {
   margin-top: 1rem;
   /* Reduced spacing for first item */
 }
 
-/* TIL lists with appropriate spacing */
-.til-content ul {
-  margin-bottom: 2rem;
-  /* Space between day sections */
+/* Notes list with appropriate spacing and elegant bullets */
+.notes-content ul {
+  margin-bottom: 0.75em;
+  /* Match paragraph spacing - 75% of body text size */
   padding-left: 1.5rem;
   /* Standard list indentation */
+  list-style-image: url('/static/bullet.svg');
+  /* Custom hollow bullet SVG */
 }
 
-.til-content li {
-  margin-bottom: 0.75rem;
-  /* Spacing between individual learnings */
-  line-height: 1.6;
-  /* Good readability for list items */
+.notes-content li {
+  margin-bottom: 0.75em;
+  /* 75% of body text size using em units for responsive scaling */
+  line-height: 1.3;
+  /* 130% of font size using unitless value */
 }
 
-/* Code styling within TIL entries */
-.til-content code {
-  background: #f8f8f8;
-  /* Light background for contrast */
-  padding: 0.2rem 0.4rem;
+/* Code styling within notes entries */
+.notes-content code {
+  background: var(--color-bg-shaded);
+  /* Shaded background from palette */
+  padding: 0.1rem 0.1rem;
   /* Minimal padding */
   border-radius: 3px;
   /* Slight rounding */
   font-size: calc(0.85rem + 0.05vw);
-  /* Responsive sizing for TIL code */
+  /* Responsive sizing for notes code */
   font-family: 'IBM Plex Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   /* IBM Plex Mono for code */
   text-rendering: optimizeLegibility;
@@ -777,21 +852,49 @@ a:hover {
 
 /* Site footer with subtle styling */
 .site-footer {
-  border-top: 1px solid #e5e5e5;
-  /* Subtle top border */
+  border-top: 1px solid var(--color-border);
+  /* Border color from palette */
   padding: 2rem 0;
   /* Generous padding */
-  text-align: center;
-  /* Center footer content */
-  color: #666;
-  /* Muted text color */
+  color: var(--color-text-secondary);
+  /* Secondary text color from palette */
   font-size: 0.9rem;
   /* Slightly smaller text */
 }
 
+/* Footer content layout - horizontal with even spacing */
+.footer-content {
+  display: flex;
+  /* Horizontal layout */
+  justify-content: space-between;
+  /* Even spacing between items */
+  align-items: center;
+  /* Center vertically */
+  flex-wrap: wrap;
+  /* Wrap on small screens */
+  gap: 1rem;
+  /* Space between items when wrapped */
+}
+
+/* Footer sections */
+.footer-name,
+.footer-email,
+.footer-built {
+  flex: 1;
+  /* Equal width distribution */
+  text-align: center;
+  /* Center text within each section */
+}
+
+/* Footer links maintain muted color */
 .site-footer a {
-  color: #666;
-  /* Match footer text color (subtle links) */
+  color: var(--color-text-secondary);
+  /* Secondary text color from palette */
+}
+
+.site-footer a:hover {
+  color: var(--color-text-primary);
+  /* Primary text color from palette */
 }
 
 /* =================================
@@ -847,7 +950,7 @@ a:hover {
   }
 
   .site-header {
-    position: fixed;
+    position: absolute;
     /* Keep fixed positioning */
     top: 0;
     /* Stick to top */
@@ -867,7 +970,7 @@ a:hover {
     /* No rounded corners for full width */
     border: none;
     /* Remove border */
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid var(--color-border);
     /* Bottom border only */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     /* Subtle shadow */

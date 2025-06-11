@@ -3,6 +3,10 @@
 <article class="post-content">
 	<header>
 		<h1>{% (print (get-in args [:_item :title])) %}</h1>
+		{% (when (get-in args [:_item :date])
+			(print (bagatto/format
+				`<p class="post-meta">%s</p>`
+				(string/slice (get-in args [:_item :date]) 0 10)))) %}
 	</header>
 	{%
 		(print (bagatto/markdown->html (get-in args [:_item :body])))

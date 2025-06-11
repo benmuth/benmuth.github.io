@@ -1,10 +1,21 @@
 			</main>
 			<footer class="site-footer">
-				<p>&copy; 2025 Ben Muthalaly</p>
-				<p><a href="mailto:{{(get-in args [:meta :email])}}">{{(get-in args [:meta :email])}}</a></p>
+				<div class="footer-content">
+					<span class="footer-name">&copy; 2025 Ben Muthalaly</span>
+					<span class="footer-email">
+						<a href="mailto:{{(get-in args [:meta :email])}}">
+							{{(get-in args [:meta :email])}}
+						</a>
+					</span>
+					<span class="footer-built">
+						{%
+							(print (bagatto/markdown->html "Built with [Bagatto](https://bagatto.co)"))
+						%}
+					</span>
+				</div>
 			</footer>
 		</div>
 	</div>
-	{{(when (get-in args [:meta :development]) "http://localhost:35729/livereload.js")}}
+	<script src="{{(when (get-in args [:meta :development]) "http://localhost:35729/livereload.js")}}"></script>
 </body>
 </html>

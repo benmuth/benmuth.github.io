@@ -1,6 +1,6 @@
 {% (bagatto/include "/templates/base-top") %}
 
-<div class="til-content">
+<div class="notes-content">
 	{% 
 		(print (bagatto/markdown->html (get-in args [:_item :body])))
 	%}

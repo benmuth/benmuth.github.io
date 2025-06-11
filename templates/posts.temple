@@ -4,16 +4,20 @@
         {% (loop [post :in (args :blog-posts)]
           (when (not (post :draft))
             (print "<li class=\"post-item\">")
-            (print "<h2 class=\"post-title\">")
+            (print "<h4 class=\"post-title\">")
             (print (bagatto/format
                       `<a href="posts/%s.html">%s</a>`
                       (bagatto/slugify (post :title))
                       (post :title)))
-            (print "</h2>")
-            (when (post :excerpt)
+            (print "</h4>")
+            (when (post :date)
+              (print (bagatto/format
+                      `<p class="post-meta">%s</p>`
+                      (string/slice (post :date) 0 10))))
+            (when (or (post :summary) (post :description))
               (print (bagatto/format
                       `<p class="post-excerpt">%s</p>`
-                      (post :excerpt))))
+                      (or (post :summary) (post :description)))))
             (print "</li>")
           )) %}
     </ul>
