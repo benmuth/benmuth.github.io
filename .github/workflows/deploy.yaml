@@ -14,10 +14,23 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
       - name: Install dependencies
         run: |
           curl https://bagatto.co/builds/bag-x86_64-static.v0-6-1.tar.gz -o bag.tar.gz
           tar -xvf bag.tar.gz
+          npm install -g html-minifier-terser uglify-js csso-cli svgo
+
+      - name: Minify site files
+        run: |
+          find site -name '*.html' -print0 | xargs -0 -n1 -I{} sh -c 'html-minifier-terser --collapse-whitespace --remove-comments --minify-js true --minify-css true -o "{}" "{}"'
+          find site -name '*.js' -print0 | xargs -0 -n1 -I{} sh -c 'uglifyjs "{}" -o "{}"'
+          find site -name '*.css' -print0 | xargs -0 -n1 -I{} sh -c 'csso "{}" --output "{}"'
+          find site -name '*.svg' -print0 | xargs -0 svgo
 
       - name: Build site
         run: |
