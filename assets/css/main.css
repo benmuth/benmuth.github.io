@@ -106,7 +106,7 @@ FILE STRUCTURE:
   /* Shaded sections - warm light gray */
   --color-text-primary: #565276;
   /* Primary text - warm purple-gray */
-  --color-text-secondary: #787591;
+  --color-text-secondary: #716F9B;
   /* Secondary/light text */
   --color-border: #e9e3e1;
   /* Borders - warm beige-gray */
@@ -206,9 +206,6 @@ body {
   /* Internal spacing */
   z-index: 100;
   /* Ensure it stays above other content */
-  transition: color 0.2s ease;
-  transition: text-shadow 0.2s ease;
-  /* Smooth hover transition */
   text-rendering: optimizeLegibility;
   /* Enhanced text rendering */
   font-feature-settings: 'kern' 1;
@@ -230,6 +227,14 @@ body {
   text-shadow: none;
   color: var(--color-text-primary);
   text-decoration: none;
+  transition: text-shadow 0.2s ease;
+}
+
+.site-header a:visited:hover {
+  text-shadow: -2px -2px 1px var(--color-accent-secondary);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: text-shadow 0.2s ease;
 }
 
 /* Site name/logo link at top of navigation */
@@ -380,8 +385,6 @@ a {
 a:hover {
   color: var(--color-text-primary);
   /* Keep blue color on hover */
-  text-decoration-thickness: 2px;
-  /* Thicker underline on hover for feedback */
   text-shadow: -2px -2px 1px var(--color-accent-secondary);
   /* More noticeable red shadow on hover */
 }
