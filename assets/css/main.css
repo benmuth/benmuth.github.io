@@ -189,7 +189,7 @@ body {
   font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-weight: 700;
   position: absolute;
-  /* Stay in place during scroll */
+  /* Stay in place during scroll - also enables absolute positioning for atom feed link */
   top: 1rem;
   /* Distance from top of viewport */
   left: 1rem;
@@ -279,6 +279,52 @@ body {
   /* Responsive sizing, slightly smaller than site name */
   padding: 0.25rem 0;
   /* Small vertical padding for click area */
+}
+
+/* Atom feed link positioned in top right corner of page */
+.atom-feed-link {
+  position: fixed;
+  /* Fixed to viewport for top right corner placement */
+  top: 1rem;
+  /* Distance from top of viewport */
+  right: 1rem;
+  /* Distance from right edge of viewport */
+  padding: 0.5rem;
+  /* Generous padding for click area */
+  color: var(--color-text-secondary);
+  /* Secondary text color */
+  text-shadow: none !important;
+  /* Override global link text shadow */
+  opacity: 0.7;
+  /* Subtle appearance */
+  transition: opacity 0.2s ease, color 0.2s ease;
+  /* Smooth hover transition */
+  z-index: 200;
+  /* Above navigation and other content */
+  background: var(--color-bg-main);
+  /* Background to ensure visibility over content */
+  border: 1px solid var(--color-border);
+  /* Border to match navigation box */
+  border-radius: 6px;
+  /* Rounded corners to match site style */
+}
+
+.atom-feed-link:hover {
+  opacity: 1;
+  /* Full opacity on hover */
+  color: var(--color-accent-primary);
+  /* Accent color on hover */
+  text-shadow: none !important;
+  /* Ensure no text shadow */
+}
+
+.atom-feed-link svg {
+  display: block;
+  /* Remove inline spacing */
+  width: 16px;
+  /* Fixed icon size */
+  height: 16px;
+  /* Fixed icon size */
 }
 
 /* =================================
@@ -560,6 +606,7 @@ a:visited:hover {
   /* Spacing between list items */
 }
 
+
 /* Code blocks with syntax highlighting preparation */
 .post-content pre {
   background: var(--color-bg-shaded);
@@ -574,7 +621,7 @@ a:visited:hover {
   /* Horizontal scroll for long code */
   margin: 1.5rem -1rem;
   /* Break out of post-content padding to use full site-container width */
-  width: calc(100% + 2rem);
+  width: calc(100% + 12em);
   /* Full width plus the padding we broke out of */
   max-width: calc(800px + 2rem);
   /* Match main-content max-width plus padding */
@@ -966,6 +1013,17 @@ a:visited:hover {
   .site-nav li {
     margin-bottom: 0;
     /* Remove vertical margins */
+  }
+
+  .atom-feed-link {
+    top: 0.5rem;
+    /* Closer to top on mobile to avoid overlap with mobile header */
+    right: 0.5rem;
+    /* Closer to edge on mobile */
+    padding: 0.4rem;
+    /* Slightly smaller padding on mobile */
+    opacity: 0.8;
+    /* Slightly more visible on mobile */
   }
 
   h1 {

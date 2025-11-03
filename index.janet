@@ -25,6 +25,8 @@
                    :out (bagatto/renderer "/templates/about")}
            :blog {:dest "blog.html"
                   :out (bagatto/renderer "/templates/blog")}
+           :atom {:dest "atom.xml"
+                  :out (bagatto/renderer "/templates/atom")}
            :fonts-static {:each :fonts
                           :dest (bagatto/path-copier "static/fonts")}
            :resume-pdf {:each :resume-pdf

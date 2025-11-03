@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{(get-in args [:meta :title])}}</title>
+  <link href="https://{{(get-in args [:meta :url])}}/atom.xml" rel="self"/>
+  <link href="https://{{(get-in args [:meta :url])}}"/>
+  <updated>2023-06-14T11:55:00-05:00</updated>
+  <id>https://{{(get-in args [:meta :url])}}/</id>
+  <author>
+    <name>{{(get-in args [:meta :author])}}</name>
+    <email>{{(get-in args [:meta :email])}}</email>
+  </author>
+
+  {% (loop [post :in (args :blog-posts)]
+       (when (not (post :draft))
+         (print "<entry>")
+         (print (bagatto/format "<title>%s</title>" (post :title)))
+         (print (bagatto/format "<link href=\"https://%s/posts/%s.html\"/>" 
+                                (get-in args [:meta :url])
+                                (bagatto/slugify (post :title))))
+         (print (bagatto/format "<id>https://%s/posts/%s.html</id>" 
+                                (get-in args [:meta :url])
+                                (bagatto/slugify (post :title))))
+         (print (bagatto/format "<updated>%s</updated>" (post :date)))
+         (if (post :summary)
+           (print (bagatto/format "<summary>%s</summary>" (post :summary)))
+           (print "<summary></summary>"))
+         (print (bagatto/format "<content type=\"html\"><![CDATA[%s]]></content>" 
+                                (bagatto/markdown->html (post :body))))
+         (print "</entry>")
+       )) %}
+</feed>
