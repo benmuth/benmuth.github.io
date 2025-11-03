@@ -14,7 +14,7 @@
                         :attrs bagatto/parse-base}
            :resume {:src (bagatto/slurp-* "pages/resume.md")}
            :about {:src "pages/about.md"}
-           :notes {:src (bagatto/slurp-* "pages/notes.md")}
+           # :notes {:src (bagatto/slurp-* "pages/notes.md")}
            :blog-posts {:src (bagatto/slurp-* "pages/blog/*.md")}})
 
 (def site {:static {:each :css
@@ -36,9 +36,9 @@
            :resume {:each :resume
                     :dest "resume.html"
                     :out (bagatto/renderer "/templates/resume")}
-           :notes {:each :notes
-                   :dest "notes.html"
-                   :out (bagatto/renderer "/templates/notes")}
+           # :notes {:each :notes
+           #         :dest "notes.html"
+           #         :out (bagatto/renderer "/templates/notes")}
            :posts {:each :blog-posts
                    :dest (bagatto/%p "posts" '%i :title '% ".html")
                    :out (bagatto/renderer "/templates/post")}
