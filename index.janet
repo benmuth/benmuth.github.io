@@ -8,7 +8,7 @@
                 :attrs bagatto/parse-base}
            :fonts {:src (bagatto/slurp-* "fonts/*.woff2")
                    :attrs bagatto/parse-base}
-           :resume-pdf {:src (bagatto/* "assets/Resume-2023.pdf")
+           :resume-pdf {:src (bagatto/* "assets/resume-2025-09.pdf")
                         :attrs bagatto/parse-base}
            :bullet-svg {:src (bagatto/* "assets/bullet.svg")
                         :attrs bagatto/parse-base}
